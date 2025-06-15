@@ -1,0 +1,36 @@
+package com.wechat.controller;
+
+
+import com.wechat.common.enums.Role;
+import com.wechat.common.model.House;
+import com.wechat.common.security.LoginRequired;
+import com.wechat.service.ClientHouseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@LoginRequired(Role.ADMIN)
+@RestController
+@RequestMapping("/api/client/house")
+public class ClientHouseController {
+
+    @Autowired
+    private ClientHouseService houseService;
+
+    // 用户查看所有房源
+    @GetMapping("/list")
+    public List<House> listAll() {
+        return houseService.listAllHouses();
+    }
+
+    //
+    @PostMapping("/seckill/{houseId}")
+    public ResponseEntity<String> seckill(
+            @PathVariable String houseId,
+            @RequestHeader("Authorization") String token) {  // ✅ 改为从请求头接收 token
+        String result = houseService.seckill(houseId, token);
+        return ResponseEntity.ok(result);
+    }
+}

@@ -1,0 +1,30 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true        # 开启服务名动态路由（用服务名代替固定路径）
+          lower-case-service-id: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/auth/**
+        - id: client-house-service
+          uri: lb://client-house-service
+          predicates:
+            - Path=/api/house/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true  # 使用 IP 注册（推荐）
+    ip-address: 127.0.0.1    # 明确指定为 localhost
