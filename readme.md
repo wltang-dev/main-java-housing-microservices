@@ -23,6 +23,8 @@ The project is still under active development and will continue to be enhanced w
 - **Maven** — Project build tool
 - **Postman** — API testing
 - **ThreadLocal (UserContext Management)** — Track logged-in user info across threads
+- **JUnit 5, Mockito, WebTestClient** — Unit & integration testing
+
 
 
 
@@ -34,6 +36,26 @@ The project is still under active development and will continue to be enhanced w
 - **house-admin-service**: Manages housing listings and admin operations
 - **house-client-service**: Exposes endpoints for client users to browse or reserve properties
 - **common**: Shared utilities, enums, DTOs
+
+##  Test Coverage
+
+This project includes both unit and integration tests to validate core functionality and microservice interactions:
+
+###  user-service
+- `AuthControllerTest` uses **JUnit 5 + Mockito** to test:
+    - User registration
+    - Login endpoint
+    - Profile retrieval for authenticated users
+
+###  api-gateway
+
+The `AuthGlobalFilterTest` verifies the custom JWT-based global filter using **WebTestClient**, testing real HTTP routing behavior.
+Test Scenarios:
+- `/api/auth/login` and `/api/auth/register` are **allowed** without tokens
+- Accessing protected endpoints without a token returns **401 Unauthorized**
+- Invalid tokens are **rejected**
+- Valid Bearer tokens (simulated) are **allowed** to pass through
+> See `screenshots/gateway-login-register-test-success.png` for example output.
 
 
 ## How to Run
