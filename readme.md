@@ -111,7 +111,7 @@ The application supports environment-specific configuration via Spring Boot prof
 
 application-dev.yaml — For local development
 application-k8s.yaml — For Kubernetes deployment
-```
+
 Profile activation is managed through the spring.profiles.active property, which can be overridden using environment variables in your CI/CD pipeline or Kubernetes manifests.
 
 #### Kubernetes Manifests Included
@@ -126,7 +126,7 @@ Example deployment:
 ```bash
 kubectl apply -f user-service-deployment.yaml
 kubectl apply -f user-service-service.yaml
-```bash
+```
 All services register with eureka-service via Kubernetes internal DNS (e.g., http://eureka-service:8761/eureka), making service discovery and routing fully dynamic.
 
 #### CI/CD Ready
