@@ -142,6 +142,10 @@ Kubernetes manifests ready for kubectl or GitOps pipelines
 
 Easily integrated into GitHub Actions, GitLab CI, Jenkins, or ArgoCD
 
+#### Note:
+The CI/CD pipeline intentionally skips Docker image push due to credential limits in public repositories.
+The current workflow focuses on demonstrating modular container builds using GitHub Actions.
+
 
 ## Roadmap
 
