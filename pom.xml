@@ -82,7 +82,7 @@
         <module>house-client-service</module>
         <module>common</module>
         <module>house-admin-service</module>
-        <module>eureka-server</module>
+        <module>eureka-service</module>
         <module>api-gateway</module>
     </modules>
 </project>

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: eureka-service
+
+eureka:
+  client:
+    register-with-eureka: false  # 自己是服务中心，不注册自己
+    fetch-registry: false        # 不去拉取其他服务
+  instance:
+    prefer-ip-address: true      # 用 IP 注册（推荐）
+
+profiles:
+  active: dev

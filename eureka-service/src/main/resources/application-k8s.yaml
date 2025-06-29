@@ -1,0 +1,6 @@
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: eureka-service  # 与 K8s Service 名字保持一致

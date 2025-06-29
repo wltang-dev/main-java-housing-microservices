@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: house-client-service
+  labels:
+    app: house-client-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: house-client-service
+  template:
+    metadata:
+      labels:
+        app: house-client-service
+    spec:
+      containers:
+        - name: house-client-service
+          image: yourdockerhub/house-client-service:latest  # 改成你的真实镜像名
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+

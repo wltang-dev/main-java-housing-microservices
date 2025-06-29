@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: user-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  profiles:
+    active: dev
+
+h2:
+  console:
+    enabled: true
+    path: /h2-console
+

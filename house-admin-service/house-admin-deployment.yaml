@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: house-admin-service
+  labels:
+    app: house-admin-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: house-admin-service
+  template:
+    metadata:
+      labels:
+        app: house-admin-service
+    spec:
+      containers:
+        - name: house-admin-service
+          image: yourdockerhub/house-admin-service:latest  # 替换为你的真实镜像地址
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+
