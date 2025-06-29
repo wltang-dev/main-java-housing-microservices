@@ -9,7 +9,7 @@ The current version focuses on rebuilding the backend architecture using Spring 
 The project is still under active development and will continue to be enhanced with more components.
 
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 - **Java 17+Spring Boot 3.x**
 - **Spring Cloud**
@@ -95,26 +95,26 @@ wechat-housing-microservices/
 ├── screenshots/
 └── README.md
 
-## Containerization & Kubernetes Support
+### Containerization & Kubernetes Support
 This project is designed with production-grade deployment in mind. Each microservice is fully containerized and ready for orchestration in cloud-native environments.
 
-### Docker Support
+#### Docker Support
 Every deployable module (e.g., user-service, api-gateway, eureka-service) includes its own Dockerfile, enabling modular container builds:
-
+```bash
 docker build -t user-service:latest ./user-service
 docker build -t api-gateway:latest ./api-gateway
+```
 The common module serves as a shared dependency and is not containerized.
 
-### Multi-Profile Environment Support
+#### Multi-Profile Environment Support
 The application supports environment-specific configuration via Spring Boot profiles:
 
 application-dev.yaml — For local development
-
 application-k8s.yaml — For Kubernetes deployment
-
+```
 Profile activation is managed through the spring.profiles.active property, which can be overridden using environment variables in your CI/CD pipeline or Kubernetes manifests.
 
-### Kubernetes Manifests Included
+#### Kubernetes Manifests Included
 For each microservice, Kubernetes manifests are provided:
 
 *-deployment.yaml — Defines container, environment, ports, and profile
@@ -123,12 +123,13 @@ For each microservice, Kubernetes manifests are provided:
 
 Example deployment:
 
-bash
+```bash
 kubectl apply -f user-service-deployment.yaml
 kubectl apply -f user-service-service.yaml
+```bash
 All services register with eureka-service via Kubernetes internal DNS (e.g., http://eureka-service:8761/eureka), making service discovery and routing fully dynamic.
 
-### CI/CD Ready
+#### CI/CD Ready
 The structure supports modern CI/CD workflows:
 
 Container builds via Dockerfile
