@@ -24,6 +24,8 @@ The project is still under active development and will continue to be enhanced w
 - **Postman** — API testing
 - **ThreadLocal (UserContext Management)** — Track logged-in user info across threads
 - **JUnit 5, Mockito, WebTestClient** — Unit & integration testing
+- **CI/CD** — GitHub Actions (or Jenkins) for automated builds & deployment
+- **Docker & Kubernetes** — Containerization and orchestration support
 
 
 
