@@ -11,7 +11,7 @@ The project is still under active development and will continue to be enhanced w
 
 ##  Technology Stack
 
-- **Java 17+Spring Boot 3.x**
+- **Java 17+ Spring Boot 3.x**
 - **Spring Cloud**
 - **Spring Cloud Gateway**
 - **Eureka (Service Discovery)**
@@ -143,8 +143,7 @@ Kubernetes manifests ready for kubectl or GitOps pipelines
 Easily integrated into GitHub Actions, GitLab CI, Jenkins, or ArgoCD
 
 #### Note:
-The CI/CD pipeline intentionally skips Docker image push due to credential limits in public repositories.
-The current workflow focuses on demonstrating modular container builds using GitHub Actions.
+This project simulates a full CI/CD pipeline. GitHub Actions is included as a basic demonstration, while Jenkins can be used in real enterprise deployment scenarios for image build, push, and Kubernetes deployment.
 
 
 ## Roadmap
