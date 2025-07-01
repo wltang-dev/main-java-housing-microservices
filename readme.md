@@ -1,4 +1,5 @@
-# WeChat Housing Microservices
+# WeChat Housing Microservices![CI](https://github.com/wltang-dev/main-java-housing-microservices/actions/workflows/build.yml/badge.svg)
+
 
 This project is a microservices-based backend system that **replicates the core functionality** of a WeChat mini-program I previously developed while working in a real-world production environment. The system was designed to support flash sale ("抢房") features for a housing application.
 
@@ -131,16 +132,15 @@ kubectl apply -f user-service-service.yaml
 ```
 All services register with eureka-service via Kubernetes internal DNS (e.g., http://eureka-service:8761/eureka), making service discovery and routing fully dynamic.
 
-#### CI/CD Ready
-The structure supports modern CI/CD workflows:
+####  GitHub Actions CI/CD
+This project is actively using GitHub Actions to:
 
-Container builds via Dockerfile
+- Automatically build Docker images for each microservice
+- Push images to DockerHub upon commit
+- CI status is shown above via badge
 
-Environment-specific config via profiles
+You can find workflows under `.github/workflows/` in this repo.
 
-Kubernetes manifests ready for kubectl or GitOps pipelines
-
-Easily integrated into GitHub Actions, GitLab CI, Jenkins, or ArgoCD
 
 #### Note:
 This project simulates a full CI/CD pipeline. GitHub Actions is included as a basic demonstration, while Jenkins can be used in real enterprise deployment scenarios for image build, push, and Kubernetes deployment.
