@@ -11,7 +11,7 @@ The project is still under active development and will continue to be enhanced w
 
 ##  Technology Stack
 
-- **Java 17+ Spring Boot  3.x**
+- **Java 17+ Spring Boot3.x**
 - **Spring Cloud**
 - **Spring Cloud Gateway**
 - **Eureka (Service Discovery)**
