@@ -1,5 +1,5 @@
-# WeChat Housing Microservices![CI](https://github.com/wltang-dev/main-java-housing-microservices/actions/workflows/build.yml/badge.svg)
-
+# WeChat Housing Microservices!
+[![Build and Push Docker Images](https://github.com/wltang-dev/main-java-housing-microservices/actions/workflows/build.yml/badge.svg)](https://github.com/wltang-dev/main-java-housing-microservices/actions/workflows/build.yml)
 
 This project is a microservices-based backend system that **replicates the core functionality** of a WeChat mini-program I previously developed while working in a real-world production environment. The system was designed to support flash sale ("抢房") features for a housing application.
 
