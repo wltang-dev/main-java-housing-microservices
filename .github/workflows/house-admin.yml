@@ -1,22 +1,15 @@
-name: Build and Push Docker Images
+name: Build and Push house-admin-service Image
 
 on:
   push:
     branches:
       - master
+    paths:
+      - 'house-admin-service/**'
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        service:
-          - user-service
-          - api-gateway
-          - house-client-service
-          - house-admin-service
-          - eureka-service
 
     steps:
       - name: Checkout code
@@ -40,7 +33,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push ${{ matrix.service }} image
+      - name: Build and Push house-admin-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.service }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/house-admin-service:latest ./house-admin-service
+          docker push ${{ secrets.DOCKER_USERNAME }}/house-admin-service:latest

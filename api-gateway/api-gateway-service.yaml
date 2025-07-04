@@ -9,5 +9,5 @@ spec:
     - name: http
       protocol: TCP
       port: 9000           # 对外暴露的端口（K8s Service Port）
-      targetPort: 9000     # 容器内部的端口
-  type: ClusterIP           # 如果要外部访问可改为 LoadBalancer 或 NodePort
+      nodePort: 30090     # 显式暴露为宿主机 30090
+  type: NodePort
