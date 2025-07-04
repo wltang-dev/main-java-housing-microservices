@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: eureka-service
-          image: yourdockerhub/eureka-service:latest  # 替换为你自己的镜像地址
+          image: achinesedocker199/eureka-service:latest  # 替换为你自己的镜像地址
           ports:
             - containerPort: 8761
           env:

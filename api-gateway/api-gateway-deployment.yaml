@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: yourdockerhub/api-gateway:latest
+          image: achinesedocker199/api-gateway:latest
           ports:
             - containerPort: 9000
           env:

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: yourdockerhub/user-service:latest
+          image: achinesedocker199/user-service:latest
           ports:
             - containerPort: 8080
           env:

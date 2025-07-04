@@ -6,22 +6,32 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        service:
+          - user-service
+          - api-gateway
+          - house-client-service
+          - house-admin-service
+          - eureka-service
+
     steps:
-      - name:  Checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name:  Set up JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name:  Build with Maven
+      - name: Build project with Maven
         run: mvn clean package -DskipTests
 
-      - name:  Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to DockerHub
@@ -30,10 +40,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push user-service image
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      - name: Build and Push ${{ matrix.service }} image
         run: |
-          docker build -t $DOCKER_USERNAME/user-service:latest ./user-service
-          docker push $DOCKER_USERNAME/user-service:latest
-      
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.service }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest

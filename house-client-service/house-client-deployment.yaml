@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: house-client-service
-          image: yourdockerhub/house-client-service:latest  # 改成你的真实镜像名
+          image: achinesedocker199/house-client-service:latest  # 改成你的真实镜像名
           ports:
             - containerPort: 8081
           env:

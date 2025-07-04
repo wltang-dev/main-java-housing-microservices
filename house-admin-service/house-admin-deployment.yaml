@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: house-admin-service
-          image: yourdockerhub/house-admin-service:latest  # 替换为你的真实镜像地址
+          image: achinesedocker199/house-admin-service:latest  # 替换为你的真实镜像地址
           ports:
             - containerPort: 8082
           env:

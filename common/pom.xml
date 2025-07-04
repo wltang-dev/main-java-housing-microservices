@@ -63,6 +63,22 @@
 
     </dependencies>
 
+    <!-- 禁用掉maven打包的插件 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+
+
 
     <artifactId>common</artifactId>
 
