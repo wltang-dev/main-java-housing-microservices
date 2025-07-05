@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@LoginRequired(Role.ADMIN)
+@LoginRequired(Role.USER)
 @RestController
 @RequestMapping("/api/client/house")
 public class ClientHouseController {
