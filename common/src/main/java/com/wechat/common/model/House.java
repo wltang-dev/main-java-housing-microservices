@@ -20,24 +20,14 @@ public class House {
 
     private Integer price;
 
-    private String saleStatus;
-
     private String mortgageStatus;
+
+    private boolean available;
+
+    private String buyerId;
 
     //  一定要有无参构造函数
     public House() {}
-
-    // 也可以加上全参构造
-    public House(String id, String buildingNumber, String floorRoomNumber, String houseType,
-                 Integer price, String saleStatus, String mortgageStatus) {
-        this.id = id;
-        this.buildingNumber = buildingNumber;
-        this.floorRoomNumber = floorRoomNumber;
-        this.houseType = houseType;
-        this.price = price;
-        this.saleStatus = saleStatus;
-        this.mortgageStatus = mortgageStatus;
-    }
 
 
 }
