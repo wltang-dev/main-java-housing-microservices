@@ -17,7 +17,7 @@ spring:
         - id: client-house-service
           uri: lb://client-house-service
           predicates:
-            - Path=/api/house/**
+            - Path=/api/client/house/**
 
 eureka:
   client:

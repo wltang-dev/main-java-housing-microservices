@@ -11,11 +11,16 @@ function App() {
     // 登录后获取房源列表
     useEffect(() => {
         if (isLoggedIn) {
-            axios.get('http://localhost:30090/api/house/list', { withCredentials: true })
+            const token = localStorage.getItem('token');  // 从本地拿 token
+
+            axios.get('http://localhost:30090/api/house/list', {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+                withCredentials: true
+            })
                 .then(response => {
                     console.log('房源接口返回：', response.data);
-
-                    // 防止返回的不是数组时报错
                     if (Array.isArray(response.data)) {
                         setHouses(response.data);
                     } else {
@@ -40,7 +45,13 @@ function App() {
 
             console.log('认证成功：', res.data);
             alert('认证成功');
-            setIsLoggedIn(true);
+            const token = res.data;
+            if (token) {
+                localStorage.setItem('token', token);
+                setIsLoggedIn(true);
+            } else {
+                alert('登录失败：未返回token');
+            }
         } catch (err) {
             console.error('认证失败: ', err);
             alert('用户名或密码错误');
