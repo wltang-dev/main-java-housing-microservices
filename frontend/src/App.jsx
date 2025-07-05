@@ -11,7 +11,7 @@ function App() {
     // 登录后获取房源列表
     useEffect(() => {
         if (isLoggedIn) {
-            axios.get('http://localhost:9000/api/client/house/list', { withCredentials: true })
+            axios.get('http://localhost:30090/api/client/house/list', { withCredentials: true })
                 .then(response => {
                     console.log('房源接口返回：', response.data);
 
@@ -33,8 +33,8 @@ function App() {
     const handleAuth = async () => {
         try {
             const url = mode === 'login'
-                ? 'http://localhost:9000/api/auth/login'
-                : 'http://localhost:9000/api/auth/register';
+                ? 'http://localhost:30090/api/auth/login'
+                : 'http://localhost:30090/api/auth/register';
 
             const res = await axios.post(url, { username, password }, { withCredentials: true });
 
