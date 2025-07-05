@@ -8,10 +8,10 @@ function App() {
     const [password, setPassword] = useState('');
     const [mode, setMode] = useState('login'); // "login" or "register"
 
-    // 登录后获取房源列表
+    // Fetch house list after login
     useEffect(() => {
         if (isLoggedIn) {
-            const token = localStorage.getItem('token');  // 从本地拿 token
+            const token = localStorage.getItem('token');  // Get token from local storage
 
             axios.get('http://localhost:30090/api/client/house/list', {
                 headers: {
@@ -20,21 +20,21 @@ function App() {
                 withCredentials: true
             })
                 .then(response => {
-                    console.log('房源接口返回：', response.data);
+                    console.log('House API response:', response.data);
                     if (Array.isArray(response.data)) {
                         setHouses(response.data);
                     } else {
-                        console.error('房源接口返回的不是数组：', response.data);
+                        console.error('House API did not return an array:', response.data);
                         setHouses([]);
                     }
                 })
                 .catch(error => {
-                    console.error('获取房源失败：', error);
+                    console.error('Failed to fetch houses:', error);
                 });
         }
     }, [isLoggedIn]);
 
-    // 登录或注册处理函数
+    // Handle login or registration
     const handleAuth = async () => {
         try {
             const url = mode === 'login'
@@ -43,61 +43,128 @@ function App() {
 
             const res = await axios.post(url, { username, password }, { withCredentials: true });
 
-            console.log('认证成功：', res.data);
-            alert('认证成功');
+            console.log('Authentication success:', res.data);
+            alert('Authentication successful');
             const token = res.data;
             if (token) {
                 localStorage.setItem('token', token);
                 setIsLoggedIn(true);
             } else {
-                alert('登录失败：未返回token');
+                alert('Login failed: No token returned');
             }
         } catch (err) {
-            console.error('认证失败: ', err);
-            alert('用户名或密码错误');
+            console.error('Authentication failed:', err);
+            alert('Invalid username or password');
         }
     };
 
-    // 未登录：显示登录/注册界面
+    // If not logged in: show login/register UI
     if (!isLoggedIn) {
         return (
-            <div>
-                <h2>{mode === 'login' ? '登录' : '注册'}</h2>
-                <input
-                    type="text"
-                    placeholder="用户名"
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                />
-                <br />
-                <input
-                    type="password"
-                    placeholder="密码"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                />
-                <br />
-                <button onClick={handleAuth}>
-                    {mode === 'login' ? '登录' : '注册'}
-                </button>
-                <p
-                    onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-                    style={{ cursor: 'pointer', color: 'blue', marginTop: '10px' }}
-                >
-                    {mode === 'login' ? '没有账号？点击注册' : '已有账号？点击登录'}
-                </p>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                backgroundColor: '#f5f5f5'
+            }}>
+                <div style={{
+                    backgroundColor: 'white',
+                    padding: '40px',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    minWidth: '300px'
+                }}>
+                    <h2 style={{textAlign: 'center', marginBottom: '20px'}}>
+                        {mode === 'login' ? 'Login' : 'Register'}
+                    </h2>
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '10px',
+                            marginBottom: '12px',
+                            borderRadius: '6px',
+                            border: '1px solid #ccc'
+                        }}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '10px',
+                            marginBottom: '20px',
+                            borderRadius: '6px',
+                            border: '1px solid #ccc'
+                        }}
+                    />
+                    <button
+                        onClick={handleAuth}
+                        style={{
+                            width: '100%',
+                            padding: '10px',
+                            borderRadius: '6px',
+                            border: 'none',
+                            backgroundColor: '#4CAF50',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {mode === 'login' ? 'Login' : 'Register'}
+                    </button>
+                    <p
+                        onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
+                        style={{
+                            textAlign: 'center',
+                            color: '#007bff',
+                            marginTop: '15px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {mode === 'login'
+                            ? 'No account? Click to register'
+                            : 'Already have an account? Click to login'}
+                    </p>
+                </div>
             </div>
         );
     }
 
-    // 已登录：显示房源列表
+    // If logged in: show house list
     return (
         <div>
-            <h1>房源列表</h1>
-            <ul>
+            <h1>House List</h1>
+            <ul style={{listStyle: 'none', padding: 0}}>
                 {houses.map((house, index) => (
-                    <li key={index}>
-                        房源 ID: {house.id} - 名称: {house.name}
+                    <li key={index} style={{
+                        border: '1px solid #ccc',
+                        marginBottom: '10px',
+                        padding: '10px',
+                        borderRadius: '5px'
+                    }}>
+                        <div>
+                            <strong>House ID:</strong> {house.id}<br/>
+                            <strong>Building:</strong> {house.buildingNumber}
+                            <strong>Room:</strong> {house.floorRoomNumber}<br/>
+                            <strong>Layout:</strong> {house.houseType} <strong>Price:</strong> {house.price} CNY<br/>
+                        </div>
+                        <div style={{
+                            padding: '2px 8px',
+                            borderRadius: '12px',
+                            fontSize: '14px',
+                            color: 'white',
+                            backgroundColor: house.available ? 'green' : 'gray',
+                            display: 'inline-block'
+                        }}>
+                            {house.available ? 'Available' : 'Sold'}
+                        </div>
                     </li>
                 ))}
             </ul>

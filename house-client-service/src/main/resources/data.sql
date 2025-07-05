@@ -8,6 +8,7 @@ CREATE TABLE house (
                        available BOOLEAN,
                        buyer_id VARCHAR(50)
 );
+
 INSERT INTO house (
     id,
     building_number,
@@ -18,23 +19,23 @@ INSERT INTO house (
     available,
     buyer_id
 ) VALUES
-      ('H001', 'A1', '1层-101', '一室一厅', 350000, '无', true, NULL),
-      ('H002', 'A1', '2层-201', '两室一厅', 480000, '有', false, 'user01'),
-      ('H003', 'A1', '3层-301', '两室一厅', 520000, '无', true, NULL),
-      ('H004', 'B1', '5层-502', '三室两厅', 680000, '无', true, NULL),
-      ('H005', 'B1', '6层-601', '三室两厅', 720000, '有', false, 'user02'),
-      ('H006', 'C1', '1层-101', '一室一厅', 360000, '无', true, NULL),
-      ('H007', 'C1', '2层-201', '两室两厅', 560000, '有', false, 'user03'),
-      ('H008', 'C1', '3层-303', '两室一厅', 590000, '无', true, NULL),
-      ('H009', 'D1', '4层-404', '四室两厅', 880000, '无', true, NULL),
-      ('H010', 'D1', '5层-502', '三室一厅', 910000, '有', false, 'user04'),
-      ('H011', 'E1', '2层-202', '两室一厅', 470000, '无', true, NULL),
-      ('H012', 'E1', '3层-305', '三室两厅', 760000, '无', true, NULL),
-      ('H013', 'F1', '1层-102', '一室一厅', 340000, '无', true, NULL),
-      ('H014', 'F1', '2层-202', '两室两厅', 650000, '有', false, 'user05'),
-      ('H015', 'F1', '3层-302', '两室两厅', 500000, '无', true, NULL),
-      ('H016', 'G1', '7层-703', '三室一厅', 730000, '无', true, NULL),
-      ('H017', 'G1', '8层-802', '四室两厅', 970000, '无', true, NULL),
-      ('H018', 'H1', '9层-905', '三室一厅', 1150000, '有', false, 'user06'),
-      ('H019', 'I1', '10层-1001', '两室一厅', 760000, '无', true, NULL),
-      ('H020', 'J1', '11层-1102', '两室一厅', 520000, '有', false, 'user07');
+      ('H001', 'A1', '1F-101', '1 Bed 1 Living', 350000, 'None', true, NULL),
+      ('H002', 'A1', '2F-201', '2 Bed 1 Living', 480000, 'Yes', false, 'user01'),
+      ('H003', 'A1', '3F-301', '2 Bed 1 Living', 520000, 'None', true, NULL),
+      ('H004', 'B1', '5F-502', '3 Bed 2 Living', 680000, 'None', true, NULL),
+      ('H005', 'B1', '6F-601', '3 Bed 2 Living', 720000, 'Yes', false, 'user02'),
+      ('H006', 'C1', '1F-101', '1 Bed 1 Living', 360000, 'None', true, NULL),
+      ('H007', 'C1', '2F-201', '2 Bed 2 Living', 560000, 'Yes', false, 'user03'),
+      ('H008', 'C1', '3F-303', '2 Bed 1 Living', 590000, 'None', true, NULL),
+      ('H009', 'D1', '4F-404', '4 Bed 2 Living', 880000, 'None', true, NULL),
+      ('H010', 'D1', '5F-502', '3 Bed 1 Living', 910000, 'Yes', false, 'user04'),
+      ('H011', 'E1', '2F-202', '2 Bed 1 Living', 470000, 'None', true, NULL),
+      ('H012', 'E1', '3F-305', '3 Bed 2 Living', 760000, 'None', true, NULL),
+      ('H013', 'F1', '1F-102', '1 Bed 1 Living', 340000, 'None', true, NULL),
+      ('H014', 'F1', '2F-202', '2 Bed 2 Living', 650000, 'Yes', false, 'user05'),
+      ('H015', 'F1', '3F-302', '2 Bed 2 Living', 500000, 'None', true, NULL),
+      ('H016', 'G1', '7F-703', '3 Bed 1 Living', 730000, 'None', true, NULL),
+      ('H017', 'G1', '8F-802', '4 Bed 2 Living', 970000, 'None', true, NULL),
+      ('H018', 'H1', '9F-905', '3 Bed 1 Living', 1150000, 'Yes', false, 'user06'),
+      ('H019', 'I1', '10F-1001', '2 Bed 1 Living', 760000, 'None', true, NULL),
+      ('H020', 'J1', '11F-1102', '2 Bed 1 Living', 520000, 'Yes', false, 'user07');
