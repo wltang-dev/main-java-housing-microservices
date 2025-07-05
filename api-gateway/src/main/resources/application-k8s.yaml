@@ -14,8 +14,8 @@ spring:
           predicates:
             - Path=/api/auth/**
 
-        - id: client-house-service
-          uri: lb://client-house-service
+        - id: house-client-service
+          uri: lb://house-client-service
           predicates:
             - Path=/api/client/house/**
 
