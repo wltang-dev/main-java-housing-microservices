@@ -1,3 +1,13 @@
+CREATE TABLE house (
+                       id VARCHAR(50) PRIMARY KEY,
+                       building_number VARCHAR(20),
+                       floor_room_number VARCHAR(20),
+                       house_type VARCHAR(20),
+                       price INT,
+                       mortgage_status VARCHAR(10),
+                       available BOOLEAN,
+                       buyer_id VARCHAR(50)
+);
 INSERT INTO house (
     id,
     building_number,

@@ -13,7 +13,7 @@ function App() {
         if (isLoggedIn) {
             const token = localStorage.getItem('token');  // 从本地拿 token
 
-            axios.get('http://localhost:30090/api/house/list', {
+            axios.get('http://localhost:30090/api/client/house/list', {
                 headers: {
                     Authorization: 'Bearer ' + token
                 },
