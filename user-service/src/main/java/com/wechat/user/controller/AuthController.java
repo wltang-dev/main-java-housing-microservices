@@ -1,11 +1,14 @@
 package com.wechat.user.controller;
 
+import com.wechat.common.dto.UserDTO;
 import com.wechat.common.enums.Role;
 import com.wechat.common.security.LoginRequired;
-import com.wechat.common.security.UserContext;
+
+import com.wechat.common.util.JwtUtil;
 import com.wechat.user.model.User;
 
 import com.wechat.user.service.AuthService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +31,20 @@ public class AuthController {
 
     @LoginRequired(Role.USER)
     @GetMapping("/profile")
-    public String getProfile() {
-        String username = UserContext.getUsername();
-        return "当前登录用户：" + username;
+    public UserDTO getProfile(@RequestHeader("Authorization") String token) {
+        Claims claims = JwtUtil.parseToken(token);
+
+        String username = claims.getSubject();
+        String role = claims.get("role", String.class);
+        Long userId = claims.get("id", Long.class);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setRole(Role.valueOf(role));
+        userDTO.setId(String.valueOf(userId));
+
+        return userDTO;
     }
+
+
 }

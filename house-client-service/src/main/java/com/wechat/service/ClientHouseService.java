@@ -1,7 +1,9 @@
 package com.wechat.service;
 
 
-import com.wechat.client.feign.HouseClientClient;
+
+import com.wechat.client.feign.UserClient;
+import com.wechat.common.dto.SeckillResponse;
 import com.wechat.common.dto.UserDTO;
 import com.wechat.common.model.House;
 import com.wechat.repository.HouseRepository;
@@ -23,7 +25,7 @@ public class ClientHouseService {
     private RedissonClient redissonClient;
 
     @Autowired
-    private HouseClientClient userClient;
+    private UserClient userClient;
 
     public List<House> listAllHouses() {
         return houseRepository.findAll();
@@ -42,16 +44,16 @@ public class ClientHouseService {
 
 
 
-    public String seckill(String houseId, String token) {
+    public SeckillResponse seckill(String houseId, String token){
 
         // 1. 查询当前登录用户信息
         UserDTO user = userClient.getProfile(token);
         if (user == null) {
-            return "请先登录后再抢房~";
+            return new SeckillResponse("fail", "请先登录后再抢房~", null);
         }
 
         if (!"USER".equals(user.getRole())) {
-            return "你没有资格参与该抢房活动";
+            return new SeckillResponse("fail", "你没有资格参与该抢房活动", null);
         }
 
         String userId = user.getId(); // 或用 ID
@@ -63,22 +65,22 @@ public class ClientHouseService {
             // 最多等2秒，锁定时间10秒
             if (lock.tryLock(2, 10, TimeUnit.SECONDS)) {
                 Optional<House> houseOpt = houseRepository.findById(houseId);
-                if (!houseOpt.isPresent()) return "房源不存在~";
+                if (!houseOpt.isPresent()) return new SeckillResponse("fail", "房源不存在~", null);
 
                 House house = houseOpt.get();
-                if (!house.isAvailable()) return "已经被抢光了~";
+                if (!house.isAvailable()) return new SeckillResponse("fail", "已经被抢光了~", null);
 
                 house.setAvailable(false);
                 house.setBuyerId(userId);
                 houseRepository.save(house);
-
-                return "恭喜你抢到了！";
+                String paymentUrl = "/payment?houseId=" + houseId;
+                return new SeckillResponse("success", "抢房成功，跳转支付页", paymentUrl);
             } else {
-                return "系统繁忙，请稍后再试~";
+                return new SeckillResponse("fail", "系统繁忙，请稍后再试~", null);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return "系统异常~";
+            return new SeckillResponse("fail", "\"系统异常~\"", null);
         } finally {
             if (lock.isHeldByCurrentThread()) {
                 lock.unlock();

@@ -1,6 +1,7 @@
 package com.wechat.controller;
 
 
+import com.wechat.common.dto.SeckillResponse;
 import com.wechat.common.enums.Role;
 import com.wechat.common.model.House;
 import com.wechat.common.security.LoginRequired;
@@ -27,10 +28,10 @@ public class ClientHouseController {
 
     //
     @PostMapping("/seckill/{houseId}")
-    public ResponseEntity<String> seckill(
+    public ResponseEntity<SeckillResponse> seckill(
             @PathVariable String houseId,
-            @RequestHeader("Authorization") String token) {  // ✅ 改为从请求头接收 token
-        String result = houseService.seckill(houseId, token);
+            @RequestHeader("Authorization") String token) {  // get token from  request head
+        SeckillResponse result = houseService.seckill(houseId, token);
         return ResponseEntity.ok(result);
     }
 }

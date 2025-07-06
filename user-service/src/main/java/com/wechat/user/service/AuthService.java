@@ -46,7 +46,8 @@ public class AuthService {
         }
 
         // 登录成功，返回 JWT
-        return JwtUtil.generateToken(dbUser.getUsername(), dbUser.getRole());
+        return  JwtUtil.generateToken(dbUser.getUsername(), String.valueOf(dbUser.getRole()), dbUser.getId());
+
     }
 
 }

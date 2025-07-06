@@ -1,20 +1,26 @@
 package com.wechat.common.dto;
 
 
+import com.wechat.common.enums.Role;
+
 public class UserDTO {
     private String id;
     private String username;
-    private String role;
+    private Role role;
 
     // 构造函数
     public UserDTO() {}
-    public UserDTO(String username, String role) {
-        this.username = username;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
         this.role = role;
     }
 
 
-    // Getter / Setter
+// Getter / Setter
 
 
     public String getId() {
@@ -33,12 +39,5 @@ public class UserDTO {
         this.username = username;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
 
