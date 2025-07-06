@@ -26,7 +26,7 @@ public class ClientHouseController {
         return houseService.listAllHouses();
     }
 
-    //
+    //解决
     @PostMapping("/seckill/{houseId}")
     public ResponseEntity<SeckillResponse> seckill(
             @PathVariable String houseId,
