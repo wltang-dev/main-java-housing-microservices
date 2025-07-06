@@ -46,8 +46,8 @@ public class ClientHouseService {
 
     public SeckillResponse seckill(String houseId, String token){
 
-        // 1. 查询当前登录用户信息
-        UserDTO user = userClient.getProfile(token);
+        // 1. 查询当前登录用户信息，因为前端传过来的token是1个纯字符串，所以需要拼接一下。
+        UserDTO user = userClient.getProfile("Bearer " + token);
         if (user == null) {
             return new SeckillResponse("fail", "请先登录后再抢房~", null);
         }
