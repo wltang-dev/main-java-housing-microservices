@@ -7,13 +7,13 @@ function PaymentPage() {
     const navigate = useNavigate();
 
     const handleFakePay = () => {
-        alert('💰 支付成功！订单已生成。');
+        alert('💰 Payment successful! Your order has been created.。');
         navigate('/houses');
     };
 
     useEffect(() => {
         if (!houseId) {
-            alert('无效访问，未指定房源');
+            alert('Invalid access: no house specified.');
             navigate('/houses');
         }
     }, [houseId, navigate]);

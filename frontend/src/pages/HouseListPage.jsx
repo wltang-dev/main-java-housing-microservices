@@ -41,8 +41,8 @@ function HouseListPage() {
                 alert(res.data.message || '抢房失败');
             }
         } catch (err) {
-            console.error('抢房请求失败:', err);
-            alert('请求出错，请稍后再试');
+            console.error('Seckill request failed:', err);
+            alert('Request error, please try again later');
         }
     };
 

@@ -23,29 +23,28 @@ public class AuthService {
     public Map<String, Object> register(User user) {
         Map<String, Object> result = new HashMap<>();
 
-        // 判断用户名是否存在
+        // Check if username already exists
         if (userRepository.findByUsername(user.getUsername()) != null) {
             result.put("status", "fail");
-            result.put("message", "用户名已存在");
+            result.put("message", "Username already exists");
             return result;
         }
 
-        // 加密密码
+        // Encrypt password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // 默认角色
+        // Set default role
         if (user.getRole() == null) {
             user.setRole(Role.USER);
         }
 
-        // 保存用户
+        // Save user
         userRepository.save(user);
 
         result.put("status", "success");
-        result.put("message", "注册成功");
+        result.put("message", "Registration successful");
         return result;
     }
-
 
     public Map<String, Object> login(User user) {
         User dbUser = userRepository.findByUsername(user.getUsername());
@@ -53,13 +52,13 @@ public class AuthService {
 
         if (dbUser == null) {
             result.put("status", "fail");
-            result.put("message", "用户不存在");
+            result.put("message", "User does not exist");
             return result;
         }
 
         if (!passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
             result.put("status", "fail");
-            result.put("message", "密码错误");
+            result.put("message", "Incorrect password");
             return result;
         }
 
@@ -67,7 +66,7 @@ public class AuthService {
 
         result.put("status", "success");
         result.put("token", token);
-        result.put("message", "登录成功");
+        result.put("message", "Login successful");
         return result;
     }
 

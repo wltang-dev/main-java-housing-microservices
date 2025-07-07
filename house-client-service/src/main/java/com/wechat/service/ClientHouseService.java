@@ -1,7 +1,5 @@
 package com.wechat.service;
 
-
-
 import com.wechat.client.feign.UserClient;
 import com.wechat.common.dto.SeckillResponse;
 import com.wechat.common.dto.UserDTO;
@@ -32,8 +30,6 @@ public class ClientHouseService {
         return houseRepository.findAll();
     }
 
-
-
     public boolean grabHouse(String houseId) {
         Optional<House> houseOpt = houseRepository.findById(houseId);
         if (houseOpt.isPresent() && houseOpt.get().isAvailable()) {
@@ -43,60 +39,56 @@ public class ClientHouseService {
         return false;
     }
 
-
-
-    public SeckillResponse seckill(String houseId, String token){
-
+    public SeckillResponse seckill(String houseId, String token) {
         System.out.println("==> Authorization Header: " + token);
-        // 1. 查询当前登录用户信息，因为前端传过来的token是1个纯字符串，所以需要拼接一下。
+
+        // 1. Retrieve current logged-in user information.
+        // Because the token from the frontend is a raw string, we need to format it.
         UserDTO user = null;
         try {
             user = userClient.getProfile(token);
         } catch (Exception e) {
-            e.printStackTrace(); // 打印看看是不是 404、连接失败等
+            e.printStackTrace(); // Print to check for 404, connection failures, etc.
         }
+
         if (user == null) {
-            return new SeckillResponse("fail", "请先登录后再抢房~", null);
+            return new SeckillResponse("fail", "Please log in before attempting to grab a house.", null);
         }
 
         if (!Role.USER.equals(user.getRole())) {
-            return new SeckillResponse("fail", "你没有资格参与该抢房活动", null);
+            return new SeckillResponse("fail", "You are not eligible to participate in this event.", null);
         }
 
-        String userId = user.getId(); // 或用 ID
-        //2. 分布式锁
+        String userId = user.getId(); // Or use ID directly
+
+        // 2. Distributed locking
         String lockKey = "lock:house:" + houseId;
         RLock lock = redissonClient.getLock(lockKey);
 
         try {
-            // 最多等2秒，锁定时间10秒
+            // Wait up to 2 seconds, lock for 10 seconds
             if (lock.tryLock(2, 10, TimeUnit.SECONDS)) {
                 Optional<House> houseOpt = houseRepository.findById(houseId);
-                if (!houseOpt.isPresent()) return new SeckillResponse("fail", "房源不存在~", null);
+                if (!houseOpt.isPresent()) return new SeckillResponse("fail", "House not found.", null);
 
                 House house = houseOpt.get();
-                if (!house.isAvailable()) return new SeckillResponse("fail", "已经被抢光了~", null);
+                if (!house.isAvailable()) return new SeckillResponse("fail", "This house has already been taken.", null);
 
                 house.setAvailable(false);
                 house.setBuyerId(userId);
                 houseRepository.save(house);
                 String paymentUrl = "/payment?houseId=" + houseId;
-                return new SeckillResponse("success", "抢房成功，跳转支付页", paymentUrl);
+                return new SeckillResponse("success", "House successfully reserved. Redirecting to payment page.", paymentUrl);
             } else {
-                return new SeckillResponse("fail", "系统繁忙，请稍后再试~", null);
+                return new SeckillResponse("fail", "System is busy, please try again later.", null);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return new SeckillResponse("fail", "\"系统异常~\"", null);
+            return new SeckillResponse("fail", "System error.", null);
         } finally {
             if (lock.isHeldByCurrentThread()) {
                 lock.unlock();
             }
         }
     }
-
-
-
-
 }
-

@@ -3,155 +3,201 @@
 
 This project is a microservices-based backend system that **replicates the core functionality** of a WeChat mini-program I previously developed while working in a real-world production environment. The system was designed to support flash sale ("抢房") features for a housing application.
 
+---
+
+##  Key Highlights
+###  Distributed Microservices + High-Concurrency Safe Design
+The system is built on a Spring Cloud-based microservices architecture, where each core domain (user, housing, gateway, etc.) is a separate service registered via Eureka and communicating through OpenFeign.
+
+To ensure data consistency and system stability under high-concurrency scenarios such as housing flash sales:
+
+A Redis-based distributed lock mechanism is used to ensure atomic operations and prevent overselling.
+
+Lock acquisition uses timeouts (e.g., tryLock for 2 seconds) to avoid deadlocks and fallback gracefully.
+
+Services are stateless and horizontally scalable, aligning with cloud-native principles and enabling high availability.
+
+ This combination demonstrates not just modular architecture, but also a real-world approach to concurrency, fault tolerance, and distributed coordination.
+
+
+###   Containerization & K8s Support
+Docker Support
+```
+docker build -t user-service:latest ./user-service
+docker build -t api-gateway:latest ./api-gateway
+```
+Multi-Profile Support
+
+application-dev.yaml — local dev
+
+application-k8s.yaml — for Kubernetes
+
+Override via spring.profiles.active
+
+Kubernetes Manifests
+```
+kubectl apply -f user-service-deployment.yaml
+kubectl apply -f user-service-service.yaml
+```
+Service discovery via internal DNS:
+http://eureka-service:8761/eureka
+🚀 CI/CD: GitHub Actions
+Build & push Docker images
+
+Integrated status badge (see top)
+Workflow located at .github/workflows/build.yml
+
+###  Dual-Layer Authentication & Authorization Design
+
+This project features **2 layers of request filtering** to ensure secure access control:
+
+1. **Global JWT Gateway Filter** (`AuthGlobalFilter.java`)
+- Intercepts all incoming requests at the gateway
+- Allows unauthenticated access to `/api/auth/*` endpoints
+- Rejects or passes valid `Bearer` tokens to downstream services
+
+2. **Custom Role-Based AOP + Annotation (@LoginRequired)**
+- Implemented via `LoginInterceptor` using Spring AOP
+- Supports declarative method-level access like:
+
+```dash
+    @LoginRequired(Role.ADMIN)
+    public void deleteUser(...) { ... }
+```
+- Uses **reflection**, **JWT parsing**, and **ThreadLocal context** to determine access rights dynamically
+- Encapsulates authorization logic cleanly outside of business code
+
+This design showcases proficiency in:
+- Java annotations & AOP
+- Spring Security concepts
+- Clean architecture patterns
+- Fine-grained permission control with custom logic
+
+### Full-Stack Functionality with React Frontend
+
+A lightweight **React frontend** is included (`frontend/` folder) to simulate user flows:
+
+-  User registration & login
+-  View house listings
+-  Reserve / purchase houses (via API)
+-  Fully integrated with the backend gateway (`api-gateway`)
+
+This allows testing the complete end-to-end business flow from browser to backend microservices.
+
+---
+
 ## Project Description
 
 The current version focuses on rebuilding the backend architecture using Spring Cloud and related technologies. While MySQL has not been integrated yet (as it's not essential at this stage), Redis has been added to simulate distributed caching and session control.
-
 The project is still under active development and will continue to be enhanced with more components.
 
+---
 
-##  Technology Stack
+## Technology Stack
 
-- **Java 17+ Spring Boot3.x**
+- **Java 17 + Spring Boot 3.x**
 - **Spring Cloud**
 - **Spring Cloud Gateway**
 - **Eureka (Service Discovery)**
-- **Spring Security + JWT** — Authentication & Authorization
-- **Spring Cloud OpenFeign** — Declarative REST client for inter-service communication
-- **Lombok, MapStruct, JPA** — Code generation & ORM tools
+- **Spring Security + JWT**
+- **Spring Cloud OpenFeign**
+- **Lombok, MapStruct, JPA**
 - **Redis** — Caching & Distributed Locking
-- **H2 Database** — Lightweight in-memory database for development/testing
-- **Maven** — Project build tool
+- **H2 Database** — Lightweight in-memory DB
+- **Maven**
+- **React + Axios + Ant Design (frontend)**
 - **Postman** — API testing
-- **ThreadLocal (UserContext Management)** — Track logged-in user info across threads
-- **JUnit 5, Mockito, WebTestClient** — Unit & integration testing
-- **CI/CD** — GitHub Actions (or Jenkins) for automated builds & deployment
-- **Docker & Kubernetes** — Containerization and orchestration support
+- **ThreadLocal (UserContext)**
+- **JUnit 5, Mockito, WebTestClient**
+- **GitHub Actions (CI/CD)**
+- **Docker & Kubernetes**
 
-
-
+---
 
 ## Modules Overview
 
 - **eureka-server**: Service discovery and registry
-- **api-gateway**: Central gateway for routing and filtering
-- **user-service**: Handles user registration and login
-- **house-admin-service**: Manages housing listings and admin operations
-- **house-client-service**: Exposes endpoints for client users to browse or reserve properties
-- **common**: Shared utilities, enums, DTOs
+- **api-gateway**: Central routing and filtering with JWT validation
+- **user-service**: Handles registration, login, role-based access
+- **house-admin-service**: Admin-specific house management
+- **house-client-service**: Client-facing APIs for browsing, buying
+- **frontend**: React client to test key flows
+- **common**: Shared models, security utils, annotations
+
+---
 
 ##  Test Coverage
 
-This project includes both unit and integration tests to validate core functionality and microservice interactions:
+This project includes both unit and integration tests:
 
-###  user-service
-- `AuthControllerTest` uses **JUnit 5 + Mockito** to test:
-    - User registration
-    - Login endpoint
-    - Profile retrieval for authenticated users
+### `user-service`
+- `AuthControllerTest` with **JUnit + Mockito**
+- Validates:
+  - User registration
+  - Login
+  - Profile access via token
 
-###  api-gateway
+### `api-gateway`
+- `AuthGlobalFilterTest` with **WebTestClient**
+- Simulates:
+  - Requests with/without tokens
+  - Proper rejection or forwarding
+- See `screenshots/gateway-login-register-test-success.png` for sample
 
-The `AuthGlobalFilterTest` verifies the custom JWT-based global filter using **WebTestClient**, testing real HTTP routing behavior.
-Test Scenarios:
-- `/api/auth/login` and `/api/auth/register` are **allowed** without tokens
-- Accessing protected endpoints without a token returns **401 Unauthorized**
-- Invalid tokens are **rejected**
-- Valid Bearer tokens (simulated) are **allowed** to pass through
-> See `screenshots/gateway-login-register-test-success.png` for example output.
+---
 
-
-## How to Run
+## ▶ How to Run
 
 ### Prerequisites
-
-- JDK 17 installed
-- Redis running locally (default port 6379)
-- Maven installed
-- IntelliJ IDEA or any Java IDE
+- JDK 17
+- Redis running locally (default `6379`)
+- Maven
+- IntelliJ IDEA or VS Code
 
 ### Steps
 
-1. Clone this repository
-2. Start Eureka Server (`eureka-server` module)
-3. Start Redis server
-4. Start functional Service and API Gateway
-5. Use Postman to call API endpoints (see below)
+```bash
+# Step 1: Clone
+git clone https://github.com/your-username/wechat-housing-microservices
 
-## Example Endpoints
+# Step 2: Start Eureka
+cd eureka-service && run `EurekaServerApplication`
 
-| Method | Endpoint             | Description         |
-|--------|----------------------|---------------------|
-| POST   | `/api/auth/register` | Register a new user |
-| POST   | `/api/auth/login`    | Authenticate user   |
+# Step 3: Start Redis
 
-### Screenshots
+# Step 4: Start other services (user, gateway, house services)
 
-All screenshots used for testing are located in the `screenshots/` folder.
+# Step 5: Run frontend
+cd frontend && npm install && npm start
+```
+ Example API Endpoints
+Method	Endpoint	Description
+POST	/api/auth/register	Register a new user
+POST	/api/auth/login	Authenticate user
 
-## Directory Structure
+### Directory Structure
 wechat-housing-microservices/
-├── eureka-server/
+├── eureka-service/
 ├── api-gateway/
 ├── user-service/
-├── common/
+├── house-client-service/
+├── house-admin-service/
+├── frontend/           # React frontend
+├── common/             # Shared code (DTOs, enums, AOP, etc.)
 ├── screenshots/
 └── README.md
 
-### Containerization & Kubernetes Support
-This project is designed with production-grade deployment in mind. Each microservice is fully containerized and ready for orchestration in cloud-native environments.
 
-#### Docker Support
-Every deployable module (e.g., user-service, api-gateway, eureka-service) includes its own Dockerfile, enabling modular container builds:
-```bash
-docker build -t user-service:latest ./user-service
-docker build -t api-gateway:latest ./api-gateway
-```
-The common module serves as a shared dependency and is not containerized.
+### Roadmap
+ Add Swagger/OpenAPI docs
 
-#### Multi-Profile Environment Support
-The application supports environment-specific configuration via Spring Boot profiles:
+ Integrate MySQL for production-ready persistence
 
-application-dev.yaml — For local development
-application-k8s.yaml — For Kubernetes deployment
+ Expand frontend with admin panel (React or Vue)
 
-Profile activation is managed through the spring.profiles.active property, which can be overridden using environment variables in your CI/CD pipeline or Kubernetes manifests.
+ Add more microservices (booking, notifications, payments)
 
-#### Kubernetes Manifests Included
-For each microservice, Kubernetes manifests are provided:
+### License
+MIT License © 2025
 
-*-deployment.yaml — Defines container, environment, ports, and profile
-
-*-service.yaml — Cluster-internal networking
-
-Example deployment:
-
-```bash
-kubectl apply -f user-service-deployment.yaml
-kubectl apply -f user-service-service.yaml
-```
-All services register with eureka-service via Kubernetes internal DNS (e.g., http://eureka-service:8761/eureka), making service discovery and routing fully dynamic.
-
-####  GitHub Actions CI/CD
-This project is actively using GitHub Actions to:
-
-- Automatically build Docker images for each microservice
-- Push images to DockerHub upon commit
-- CI status is shown above via badge
-
-You can find workflows under `.github/workflows/` in this repo.
-
-
-#### Note:
-This project simulates a full CI/CD pipeline. GitHub Actions is included as a basic demonstration, while Jenkins can be used in real enterprise deployment scenarios for image build, push, and Kubernetes deployment.
-
-
-## Roadmap
-
-- Implement Swagger/OpenAPI documentation
-- Add more domain services (e.g., listing, booking)
-
-## License
-
-This project is licensed under the MIT License.
 
