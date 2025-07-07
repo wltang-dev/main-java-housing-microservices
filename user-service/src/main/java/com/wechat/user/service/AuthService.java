@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class AuthService {
 
@@ -17,37 +20,55 @@ public class AuthService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public String register(User user) {
+    public Map<String, Object> register(User user) {
+        Map<String, Object> result = new HashMap<>();
+
+        // 判断用户名是否存在
         if (userRepository.findByUsername(user.getUsername()) != null) {
-            return "用户名已存在";
+            result.put("status", "fail");
+            result.put("message", "用户名已存在");
+            return result;
         }
 
         // 加密密码
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // 默认角色：普通用户
+        // 默认角色
         if (user.getRole() == null) {
             user.setRole(Role.USER);
         }
 
+        // 保存用户
         userRepository.save(user);
-        return "注册成功";
+
+        result.put("status", "success");
+        result.put("message", "注册成功");
+        return result;
     }
 
-    public String login(User user) {
+
+    public Map<String, Object> login(User user) {
         User dbUser = userRepository.findByUsername(user.getUsername());
+        Map<String, Object> result = new HashMap<>();
+
         if (dbUser == null) {
-            return "用户不存在";
+            result.put("status", "fail");
+            result.put("message", "用户不存在");
+            return result;
         }
 
-        // 校验密码
         if (!passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
-            return "密码错误";
+            result.put("status", "fail");
+            result.put("message", "密码错误");
+            return result;
         }
 
-        // 登录成功，返回 JWT
-        return  JwtUtil.generateToken(dbUser.getUsername(), String.valueOf(dbUser.getRole()), dbUser.getId());
+        String token = JwtUtil.generateToken(dbUser.getUsername(), String.valueOf(dbUser.getRole()), dbUser.getId());
 
+        result.put("status", "success");
+        result.put("token", token);
+        result.put("message", "登录成功");
+        return result;
     }
 
 }

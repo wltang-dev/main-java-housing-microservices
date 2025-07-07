@@ -5,16 +5,34 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  data:
-    redis:
-      host: redis
-      port: 6379
+
   sql:
     init:
       mode: always
   h2:
     console:
       enabled: true
+  profiles:
+    active: dev
 
-profiles:
-  active: dev
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 5000
+        loggerLevel: full
+  httpclient:
+    enabled: true
+  okhttp:
+    enabled: false
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG

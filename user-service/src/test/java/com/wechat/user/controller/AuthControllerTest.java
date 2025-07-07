@@ -9,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -31,12 +34,18 @@ class AuthControllerTest {
         user.setUsername("alice");
         user.setPassword("123456");
 
-        when(authService.register(user)).thenReturn("注册成功");
+        Map<String, Object> expected = new HashMap<>();
+        expected.put("status", "success");
+        expected.put("message", "注册成功");
 
-        String result = authController.register(user);
-        assertEquals("注册成功", result);
+        when(authService.register(user)).thenReturn(expected);
 
-        verify(authService).register(user); // 验证是否调用过
+        Map<String, Object> result = authController.register(user);
+
+        assertEquals("success", result.get("status"));
+        assertEquals("注册成功", result.get("message"));
+
+        verify(authService).register(user);
     }
 
     @Test
@@ -45,13 +54,20 @@ class AuthControllerTest {
         user.setUsername("bob");
         user.setPassword("password");
 
-        when(authService.login(user)).thenReturn("登录成功");
+        Map<String, Object> expected = new HashMap<>();
+        expected.put("status", "success");
+        expected.put("token", "fake-jwt-token");
 
-        String result = authController.login(user);
-        assertEquals("登录成功", result);
+        when(authService.login(user)).thenReturn(expected);
+
+        Map<String, Object> result = authController.login(user);
+
+        assertEquals("success", result.get("status"));
+        assertEquals("fake-jwt-token", result.get("token"));
 
         verify(authService).login(user);
     }
+
 
     @Disabled("getProfile() 暂时跳过，需重构或引入 PowerMock 支持静态方法 mock")
     @Test

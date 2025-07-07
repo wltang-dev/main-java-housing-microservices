@@ -12,6 +12,8 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -20,18 +22,25 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    public Map<String, Object> register(@RequestBody User user) {
         return authService.register(user);
     }
 
+
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public Map<String, Object> login(@RequestBody User user) {
         return authService.login(user);
     }
 
     @LoginRequired(Role.USER)
     @GetMapping("/profile")
     public UserDTO getProfile(@RequestHeader("Authorization") String token) {
+        System.out.println("到了");
+        // 1. 去掉前缀 Bearer（注意大小写和空格）
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7).trim();
+        }
+        System.out.println("解析前 token = [" + token + "]");
         Claims claims = JwtUtil.parseToken(token);
 
         String username = claims.getSubject();

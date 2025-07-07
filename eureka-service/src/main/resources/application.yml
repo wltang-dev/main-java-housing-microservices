@@ -1,6 +1,8 @@
 spring:
   application:
     name: eureka-service
+  profiles:
+    active: dev
 
 eureka:
   client:
@@ -9,5 +11,4 @@ eureka:
   instance:
     prefer-ip-address: true      # 用 IP 注册（推荐）
 
-profiles:
-  active: dev
+

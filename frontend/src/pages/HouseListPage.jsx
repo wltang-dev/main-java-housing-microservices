@@ -9,10 +9,11 @@ function HouseListPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
     const navigate = useNavigate();
+    const BASE_URL = import.meta.env.VITE_API_BASE;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get('http://localhost:30090/api/client/house/list', {
+        axios.get(`${BASE_URL}/api/client/house/list`, {
             headers: { Authorization: 'Bearer ' + token },
             withCredentials: true
         })
@@ -24,7 +25,7 @@ function HouseListPage() {
         const token = localStorage.getItem('token');
         try {
             const res = await axios.post(
-                `http://localhost:30090/api/client/house/seckill/${houseId}`,
+                `${BASE_URL}/api/client/house/seckill/${houseId}`,
                 {},
                 {
                     headers: {

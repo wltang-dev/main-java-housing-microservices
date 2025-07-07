@@ -17,6 +17,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) return true;
 
         HandlerMethod method = (HandlerMethod) handler;
+        System.out.println("到了拦截器");
         LoginRequired loginRequired = method.getMethodAnnotation(LoginRequired.class);
         if (loginRequired == null) {
             loginRequired = method.getBeanType().getAnnotation(LoginRequired.class);
@@ -30,7 +31,10 @@ public class LoginInterceptor implements HandlerInterceptor {
             response.getWriter().write("Unauthorized - missing token");
             return false;
         }
-
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7).trim(); // ✅ strip 掉 "Bearer "
+        }
+        System.out.println("到了拦截器2");
         try {
             Claims claims = JwtUtil.parseToken(token);
             String username = claims.getSubject();

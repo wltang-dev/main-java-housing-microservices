@@ -5,6 +5,7 @@ package com.wechat.service;
 import com.wechat.client.feign.UserClient;
 import com.wechat.common.dto.SeckillResponse;
 import com.wechat.common.dto.UserDTO;
+import com.wechat.common.enums.Role;
 import com.wechat.common.model.House;
 import com.wechat.repository.HouseRepository;
 import org.redisson.api.RLock;
@@ -46,13 +47,19 @@ public class ClientHouseService {
 
     public SeckillResponse seckill(String houseId, String token){
 
+        System.out.println("==> Authorization Header: " + token);
         // 1. 查询当前登录用户信息，因为前端传过来的token是1个纯字符串，所以需要拼接一下。
-        UserDTO user = userClient.getProfile("Bearer " + token);
+        UserDTO user = null;
+        try {
+            user = userClient.getProfile(token);
+        } catch (Exception e) {
+            e.printStackTrace(); // 打印看看是不是 404、连接失败等
+        }
         if (user == null) {
             return new SeckillResponse("fail", "请先登录后再抢房~", null);
         }
 
-        if (!"USER".equals(user.getRole())) {
+        if (!Role.USER.equals(user.getRole())) {
             return new SeckillResponse("fail", "你没有资格参与该抢房活动", null);
         }
 

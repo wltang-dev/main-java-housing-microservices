@@ -8,15 +8,20 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()  // 放行登录注册
-                        .anyRequest().permitAll()  // 其余接口都放行（后期可改为 .authenticated()）
-                )
-                .csrf(csrf -> csrf.disable()); // ✅ 推荐写法，防止警告
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            http
+                    .csrf(csrf -> csrf.disable()) // 禁用 CSRF
+                    .headers(headers -> headers
+                            .frameOptions(frame -> frame.disable()) // 允许 iframe 加载
+                    )
+                    .authorizeHttpRequests(auth -> auth
+                            .requestMatchers("/h2-console/**", "/api/auth/**").permitAll() // 放行 H2 Console 和注册登录接口
+                            .anyRequest().authenticated()
+                    );
 
-        return http.build();
-    }
+            return http.build();
+        }
 }
+
+

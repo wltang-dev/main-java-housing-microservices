@@ -8,21 +8,23 @@ function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const BASE_URL = import.meta.env.VITE_API_BASE;
+
+
 
     const handleAuth = async () => {
         try {
             const url = mode === 'login'
-                ? 'http://localhost:30090/api/auth/login'
-                : 'http://localhost:30090/api/auth/register';
-
+                ? `${BASE_URL}/api/auth/login`
+                : `${BASE_URL}/api/auth/register`;
             const res = await axios.post(url, { username, password }, { withCredentials: true });
-            const token = res.data;
+            const { status, token, message } = res.data;
 
-            if (token) {
+            if (status === 'success' && token) {
                 localStorage.setItem('token', token);
                 navigate('/houses');
             } else {
-                alert('Login failed: No token returned');
+                alert(message || 'login failed. Please verify your credentials.');
             }
         } catch (err) {
             console.error('Authentication failed:', err);
